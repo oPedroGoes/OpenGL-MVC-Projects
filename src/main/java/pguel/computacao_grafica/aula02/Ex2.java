@@ -16,11 +16,9 @@ import java.awt.event.KeyEvent;
 import java.security.Key;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class Ex2 {
-    public static BiConsumer<Figure, Point> onLeftClick = (figure, point) -> {figure.setCurrentPoint(point);};
-    public static BiConsumer<Figure, Point> onRightClick = (figure, point) -> {figure.setCurrentPoint(point);};
 
     public static void main(String[] args) {
         Figure figure = new Figure();
@@ -28,6 +26,12 @@ public class Ex2 {
         WindowSize wsize = new WindowSize(500, 500);
         PointView ptv = new PointView(figure, ortho);
         Map<Integer, Runnable> actions = new HashMap<>();
+
+        Consumer<Point> onLeftClick = (click) -> {
+            figure.addPoint(click);
+            figure.setCurrentPoint(click);
+        };
+        Consumer<Point> onRightClick = (click) -> figure.setCurrentPoint(figure.findNearest(click));
 
         GLProfile profile = GLProfile.get(GLProfile.GL2);
         GLCapabilities capabilities = new GLCapabilities(profile);
@@ -61,7 +65,6 @@ public class Ex2 {
 
         MouseController mouseController = new MouseController(
                 panel,
-                figure,
                 ortho,
                 wsize,
                 onLeftClick,

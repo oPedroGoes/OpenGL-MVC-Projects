@@ -11,11 +11,9 @@ import pguel.computacao_grafica.common.model.WindowSize;
 import pguel.computacao_grafica.common.view.PointView;
 
 import javax.swing.*;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class Ex1 {
-    public static BiConsumer<Figure, Point> onLeftClick = (figure, point) -> {};
-    public static BiConsumer<Figure, Point> onRightClick = (figure, point) -> {figure.popPoint(point);};
 
     public static void main(String[] args) {
         Figure figure = new Figure();
@@ -24,6 +22,9 @@ public class Ex1 {
 
         PointView ptv = new PointView(figure, ortho);
 
+        Consumer<Point> onLeftClick = (click) -> figure.addPoint(click);
+        Consumer<Point> onRightClick = (click) -> figure.popPoint(figure.findNearest(click));
+
         GLProfile profile = GLProfile.get(GLProfile.GL2);
         GLCapabilities capabilities = new GLCapabilities(profile);
 
@@ -31,7 +32,6 @@ public class Ex1 {
 
         MouseController controller = new MouseController(
                 panel,
-                figure,
                 ortho,
                 wsize,
                 onLeftClick,
