@@ -1,9 +1,18 @@
 package pguel.computacao_grafica.common.util;
 
 import pguel.computacao_grafica.common.model.Figure;
+import pguel.computacao_grafica.common.model.Matrix3;
 import pguel.computacao_grafica.common.model.Point;
 
 public class Transform2D {
+
+    public static void applyInPlace(Figure figure, Matrix3 matrix){
+        for (Point point : figure.getPoints()){
+            Point transformed = matrix.apply(point);
+            point.setX(transformed.getX());
+            point.setY(transformed.getY());
+        }
+    }
 
     public static Point translate(Point point, float dx, float dy){
         return new Point(point.getX() + dx, point.getY() + dy);

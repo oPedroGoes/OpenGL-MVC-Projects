@@ -8,11 +8,26 @@ import java.util.Map;
 public class KeyboardController extends KeyAdapter {
 
     Map<Integer, Runnable> actions;
+    Map<Character, Runnable> charActions;
     JPanel panel;
 
     public KeyboardController(Map<Integer, Runnable> actions, JPanel panel){
+        this(actions, Map.of(), panel);
+    }
+
+    public KeyboardController(Map<Integer, Runnable> actions, Map<Character, Runnable> charActions, JPanel panel){
         this.actions = actions;
+        this.charActions = charActions;
         this.panel = panel;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent event) {
+        Runnable action = charActions.get(event.getKeyChar());
+        if (action != null){
+            action.run();
+            panel.repaint();
+        }
     }
 
     @Override
