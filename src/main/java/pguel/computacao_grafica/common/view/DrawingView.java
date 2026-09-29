@@ -38,8 +38,6 @@ public class DrawingView implements GLEventListener {
         for (Figure figure : drawing.getFigures()) {
             gl.glBegin(GL2.GL_LINE_STRIP);
             for (Point point : figure.getPoints()) {
-                System.out.println("");
-                System.out.println("Escrevendo ponto... " + point.getX() + " " + point.getY());
                 gl.glVertex2f(point.getX(), point.getY());
             }
             gl.glEnd();

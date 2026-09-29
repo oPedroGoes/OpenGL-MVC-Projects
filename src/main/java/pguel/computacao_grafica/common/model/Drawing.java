@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+// Modelo para se adicionar figuras em uma lista List<Figures>
 public class Drawing {
     private List<Figure> drawing;
 

@@ -17,20 +17,27 @@ public class MouseController extends MouseAdapter {
     WindowSize window;
     Consumer<Point> onLeftClick;
     Consumer<Point> onRightClick;
+    Consumer<Point> onPress;
+    Consumer<Point> onDrag;
 
     public MouseController(JPanel panel, OrthoBounds ortho, WindowSize window, Consumer<Point> onLeftClick, Consumer<Point> onRightClick){
+        this(panel, ortho, window, onLeftClick, onRightClick, point -> {}, point -> {});
+    }
+
+    public MouseController(JPanel panel, OrthoBounds ortho, WindowSize window, Consumer<Point> onLeftClick, Consumer<Point> onRightClick, Consumer<Point> onPress, Consumer<Point> onDrag){
         super();
         this.panel = panel;
         this.ortho = ortho;
         this.window = window;
         this.onLeftClick = onLeftClick;
         this.onRightClick = onRightClick;
+        this.onPress = onPress;
+        this.onDrag = onDrag;
     }
 
     @Override
     public void mouseClicked(MouseEvent event){
-        Point click = new Point(event.getX(), event.getY());
-        Point point = CoordUtils.mapWindowToOrtho(click, ortho, window);
+        Point point = toOrtho(event);
 
         switch (event.getButton()) {
             case MouseEvent.BUTTON1 -> onLeftClick.accept(point);
@@ -40,5 +47,25 @@ public class MouseController extends MouseAdapter {
 
         panel.requestFocusInWindow();
         panel.repaint();
+    }
+
+    @Override
+    public void mousePressed(MouseEvent event){
+        if (SwingUtilities.isLeftMouseButton(event)){
+            onPress.accept(toOrtho(event));
+            panel.repaint();
+        }
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent event){
+        if (SwingUtilities.isLeftMouseButton(event)){
+            onDrag.accept(toOrtho(event));
+            panel.repaint();
+        }
+    }
+
+    private Point toOrtho(MouseEvent event){
+        return CoordUtils.mapWindowToOrtho(new Point(event.getX(), event.getY()), ortho, window);
     }
 }
